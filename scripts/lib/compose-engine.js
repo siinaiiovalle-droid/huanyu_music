@@ -479,8 +479,9 @@ function renderSong(plan, opts = {}) {
   const mix = new D.Mix(totalSec, SR);
   buildBeds(mix, seq, plan);
 
-  // 逐字人声
+  // 逐字旋律骨架：有人声时交给 vocal.js 演唱，无人声时由乐器演奏
   const tp = plan.transpose;
+  const vocalOn = opts.vocal !== false && process.env.VOCAL !== '0';
   const harmonyAll = plan.style.harmony === 'all';
   const syllables = [];
   for (const line of plan.lines) {
@@ -496,10 +497,29 @@ function renderSong(plan, opts = {}) {
       });
     }
   }
-  const vox = vocal.buildVocalTrack(syllables, totalSec, { voice: opts.voice });
-  const vg = opts.vocalGain ?? plan.style.vocalGain ?? 1.6;
-  for (let i = 0; i < mix.n; i++) { mix.l[i] += vox.l[i] * vg; mix.r[i] += vox.r[i] * vg; }
-  plan.syllables = syllables.length;
+  if (vocalOn) {
+    const vox = vocal.buildVocalTrack(syllables, totalSec, { voice: opts.voice });
+    const vg = opts.vocalGain ?? plan.style.vocalGain ?? 1.6;
+    for (let i = 0; i < mix.n; i++) { mix.l[i] += vox.l[i] * vg; mix.r[i] += vox.r[i] * vg; }
+    plan.syllables = syllables.length;
+  } else {
+    // 无人声版：把逐字旋律连成乐句，用主奏音色唱出原本的旋律线
+    const bell = plan.style.lead === 'bell';
+    for (let k = 0; k < syllables.length;) {
+      const s = syllables[k];
+      let dur = s.durSec;
+      let j = k + 1;
+      while (j < syllables.length && syllables[j].midi === s.midi && Math.abs(syllables[j].t0 - (s.t0 + dur)) < 1e-6) {
+        dur += syllables[j].durSec;
+        j++;
+      }
+      const long = dur >= seq.beat * 1.5;
+      if (bell) D.bell(mix, s.t0, s.midi, dur * 0.96, { amp: long ? 0.3 : 0.24 });
+      else D.lead(mix, s.t0, s.midi, dur * 0.96, { amp: long ? 0.3 : 0.25 });
+      k = j;
+    }
+    plan.syllables = 0;
+  }
 
   // 副歌上方的应答旋律（器乐对句）
   for (const line of plan.lines) {

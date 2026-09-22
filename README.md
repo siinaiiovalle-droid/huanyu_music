@@ -1,6 +1,6 @@
 # 寰宇音乐台 Huanyu Music
 
-面向世界的原创音乐网站。**所有音乐由代码实时合成**——和声、旋律、音色、鼓组、混音乃至中文人声，没有一个采样来自别处。
+面向世界的原创音乐网站。**所有音乐由代码实时合成**——和声、旋律、音色、鼓组、混音乃至旋律线，没有一个采样来自别处。全站为纯器乐作品，不含人声。
 
 - 公网地址（GitHub Pages）：<https://siinaiiovalle-droid.github.io/huanyu_music/>
 - 源码仓库：<https://github.com/siinaiiovalle-droid/huanyu_music>
@@ -13,8 +13,8 @@
 | 能力 | 实现方式 |
 | --- | --- |
 | 编曲 / 音色 / 鼓组 / 混音 | `scripts/lib/dsp.js` 自研 DSP（含限幅、混响、延迟、滤波） |
-| 中文人声 | Windows SAPI（Huihui）：逐字合成音节 → 重采样定音高 → 峰值 EQ（SSML 的 pitch 对该声库无效） |
-| 歌词 | `scripts/lib/lyrics-engine.js` 生成中英对照歌词并按字对齐到旋律时间轴 |
+| 旋律线 | `scripts/lib/dsp.js` 的主奏音色按谱面演奏；原本为演唱写作的旋律由乐器完整奏出（全站无人声） |
+| 歌词 | `scripts/lib/lyrics-engine.js` 生成中英对照歌词并按字对齐到旋律时间轴——用于生成旋律骨架，不对外展示 |
 | 转 MP3 / 时长波形分析 | 系统 ffmpeg |
 | 封面 | `scripts/make-covers.js` 按种子生成 `nebula / orbit / waves` 三种风格的 1600×1600 PNG |
 | 数据存储 | `data/tracks.json`（纯 JSON，可平滑替换为数据库） |
@@ -25,12 +25,13 @@
 
 ```bash
 npm start                # 启动本地服务（默认 3000 端口）
-npm run daily            # 每日生产：3 首纯音乐 + 3 首歌曲 → 入库 → 同步线上
+npm run daily            # 每日生产：3 首纯音乐（无人声）→ 入库 → 同步线上
 npm run compose          # 一次性合成两首示例作品 + 封面 + 入库
 npm run add              # 命令行发布新作品（加 --server 可远程上传）
 npm run test:api         # 接口冒烟自检
 npm run build:static     # 导出纯静态站到 dist/（配合 static-shim.js 免后端运行）
 npm run sync:pages       # 重新导出静态站并强推到 gh-pages 分支
+npm run strip-vocals     # 把曲库里的旧人声作品重制为纯器乐版（同种子重渲染，只去掉人声）
 npm run covers            # 重新生成示例封面（会同步出各档缩略图）
 npm run thumbs            # 为所有封面补/重做 tiny/thumb/large 三档 JPEG（--force 全量重做）
 npm run daily:task          # 注册 / 更新 Windows 计划任务
@@ -47,7 +48,7 @@ npm run daily -- --bitrate=192k               # 指定 MP3 码率
 
 ## 每天自动做什么
 
-注册一次 Windows 计划任务后，系统会**每天自动合成 3 首纯音乐 + 3 首歌曲**，体检、转码、生成封面、入库，并自动推送到 GitHub Pages 上线：
+注册一次 Windows 计划任务后，系统会**每天自动合成 3 首纯音乐**（无人声），体检、转码、生成封面、入库，并自动推送到 GitHub Pages 上线：
 
 ```powershell
 node scripts/install-daily-task.js              # 默认每天 07:30
@@ -59,7 +60,7 @@ node scripts/install-daily-task.js --uninstall  # 删除任务
 
 手动触发一次：`schtasks /Run /TN "寰宇音乐台-每日作曲"`。
 
-任务以当前用户身份运行——人声合成依赖 Windows 语音合成，需要用户会话，因此请保持电脑处于开机登录状态。每批 6 首约需数十分钟，运行报告写在 `build/last-daily-run.json`。
+任务以当前用户身份运行（`git push` 需要本机登录态），因此请保持电脑处于开机登录状态。每批 3 首约需十几分钟，运行报告写在 `build/last-daily-run.json`。
 
 ## 注意事项
 

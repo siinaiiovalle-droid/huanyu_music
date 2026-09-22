@@ -16,6 +16,7 @@
     "covers": "node scripts/make-covers.js",
     "thumbs": "node scripts/make-thumbs.js",
     "add": "node scripts/add-track.js",
+    "strip-vocals": "node scripts/strip-vocals.js",
     "test:tts": "node scripts/test-tts.js",
     "test:api": "node scripts/test-api.js",
     "build:static": "node scripts/build-static.js",

@@ -207,8 +207,11 @@
         const src = this.ctx.createMediaElementSource(this.audio);
         this.analyser = this.ctx.createAnalyser();
         this.analyser.fftSize = 128;
+        // 注意：createMediaElementSource 会把 <audio> 的输出独占接管到 Web Audio 图中，
+        // 因此主链路必须全增益直连 destination，否则页面听不到声音。
+        src.connect(this.ctx.destination);
+        // 分析器挂旁路，供 track.js 实时频谱读取；AnalyserNode 无需连到 destination 也能取数据。
         src.connect(this.analyser);
-        this.analyser.connect(this.ctx.destination);
       } catch (e) { this.analyser = null; }
     },
 

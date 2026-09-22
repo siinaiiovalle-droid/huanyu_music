@@ -349,11 +349,23 @@ function build(opts = {}) {
   if (bedsOn) { console.log('[伴奏] 开始编曲…'); buildBeds(mix); }
 
   const syllables = buildSyllables();
-  console.log(`[人声] 共 ${syllables.length} 个音节`);
-  const vox = buildVocalTrack(syllables, totalSec, opts);
-
-  const voxGain = opts.vocalGain ?? 1.6;
-  for (let i = 0; i < mix.n; i++) { mix.l[i] += vox.l[i] * voxGain; mix.r[i] += vox.r[i] * voxGain; }
+  const vocalOn = opts.vocal !== false && process.env.VOCAL !== '0';
+  if (vocalOn) {
+    console.log(`[人声] 共 ${syllables.length} 个音节`);
+    const vox = buildVocalTrack(syllables, totalSec, opts);
+    const voxGain = opts.vocalGain ?? 1.6;
+    for (let i = 0; i < mix.n; i++) { mix.l[i] += vox.l[i] * voxGain; mix.r[i] += vox.r[i] * voxGain; }
+  } else {
+    // 无人声版：逐字旋律连成乐句，由主奏乐器奏出
+    for (let k = 0; k < syllables.length;) {
+      const s = syllables[k];
+      let dur = s.durSec;
+      let j = k + 1;
+      while (j < syllables.length && syllables[j].midi === s.midi && Math.abs(syllables[j].t0 - (s.t0 + dur)) < 1e-6) { dur += syllables[j].durSec; j++; }
+      D.lead(mix, s.t0, s.midi, dur * 0.96, { amp: dur >= seq.beat * 1.5 ? 0.3 : 0.25 });
+      k = j;
+    }
+  }
 
   const rev = new D.Reverb(SR, 0.7, 0.36);
   const wetL = new Float32Array(mix.n);

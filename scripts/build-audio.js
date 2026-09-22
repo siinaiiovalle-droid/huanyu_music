@@ -95,7 +95,7 @@ function main() {
   console.log('\n[1/4] 合成《星海序曲》…');
   const a = instrumental.build();
   console.log('\n[2/4] 合成《世界同频》…');
-  const b = song.build();
+  const b = song.build({ vocal: false });
   console.log('\n[3/4] 生成封面…');
   covers.build();
   console.log('\n[4/4] 转码与入库…');
@@ -154,7 +154,7 @@ function main() {
 
   const trackB = {
     ...baseTrack('world-in-sync'),
-    kind: 'song',
+    kind: 'instrumental',
     audio: publish(b.file, 'world-in-sync.mp3', {
       title: '世界同频 World in Sync', artist: '寰宇音乐台', album: '寰宇原创音乐集',
       genre: 'Pop', date: new Date().getFullYear().toString(),
@@ -174,12 +174,12 @@ function main() {
       fr: 'Le monde en harmonie', ja: '世界は同じ鼓動', ar: 'العالم على نفس الإيقاع'
     },
     subtitle: {
-      zh: '原创歌曲 · 中文演唱', en: 'Original song · Sung in Chinese',
-      es: 'Canción original · Cantada en chino', fr: 'Chanson originale · Chantée en chinois',
-      ja: 'オリジナル曲・中国語ボーカル', ar: 'أغنية أصلية · غناء بالصينية'
+      zh: '纯音乐 · 流行抒情', en: 'Instrumental · Pop Ballad',
+      es: 'Instrumental · Balada pop', fr: 'Instrumental · Ballade pop',
+      ja: 'インストゥルメンタル・ポップバラード', ar: 'موسيقى آلات · بالاد بوب'
     },
     description: {
-      zh: '一首唱给世界的歌。山海与星辰都不能隔开彼此，不同的语言唱出的是同样的爱。人声由语音合成引擎逐字生成后按旋律定音高、按谱面对齐节奏，中文歌词可以清晰听辨。',
+      zh: '一首写给世界的曲子。山海与星辰都不能隔开彼此，不同的语言唱出的是同样的爱。旋律原本为人声而作，如今由主奏乐器完整奏出，全曲无人声。',
       en: 'A song for the whole world. Neither mountains nor seas nor stars can keep us apart; different languages sing the same love. The vocal is generated syllable by syllable, then tuned to the melody and aligned to the score — the Chinese lyrics stay clearly intelligible.',
       es: 'Una canción para el mundo: distintos idiomas, el mismo amor. La voz se genera sílaba a sílaba y se afina con la melodía.',
       fr: 'Une chanson pour le monde : des langues différentes, le même amour. La voix est générée syllabe par syllabe puis accordée à la mélodie.',
@@ -187,18 +187,14 @@ function main() {
       ar: 'أغنية للعالم كله: لغات مختلفة، والحب نفسه. يُولَّد الصوت مقطعاً بمقطع ثم يُضبط على اللحن.'
     },
     credits: {
-      zh: '作词 / 作曲 / 编曲：寰宇音乐台 AI 作曲引擎　演唱：中文语音合成声库',
-      en: 'Lyrics, composition and arrangement by the Huanyu Music AI engine; vocal by the Chinese speech synthesis voice',
-      es: 'Letra, composición y arreglos: motor de IA de Huanyu Music; voz: síntesis de voz en chino',
-      fr: 'Paroles, composition et arrangements : moteur IA de Huanyu Music ; voix : synthèse vocale chinoise',
-      ja: '作詞・作曲・編曲：寰宇音楽台 AI 作曲エンジン／ボーカル：中国語音声合成',
-      ar: 'الكلمات والتلحين والتوزيع: محرك التأليف الآلي في Huanyu Music؛ الصوت: تخليق الكلام الصيني'
+      zh: '作曲 / 编曲 / 混音：寰宇音乐台 AI 作曲引擎',
+      en: 'Composed, arranged and mixed by the Huanyu Music AI engine',
+      es: 'Composición, arreglos y mezcla: motor de IA de Huanyu Music',
+      fr: 'Composition, arrangement et mixage : moteur IA de Huanyu Music',
+      ja: '作曲・編曲・ミックス：寰宇音楽台 AI 作曲エンジン',
+      ar: 'التأليف والتوزيع والمزج: محرك التأليف الآلي في Huanyu Music'
     },
-    lyrics: {
-      lang: 'zh',
-      languages: ['zh', 'en'],
-      lines: lyrics
-    }
+    lyrics: null
   };
 
   // 合并入库：保留已存在的手工字段
