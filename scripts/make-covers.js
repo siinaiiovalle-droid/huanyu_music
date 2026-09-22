@@ -147,6 +147,73 @@ function hsl(h, s, l) {
   return [f(0), f(8), f(4)];
 }
 
+/** 每日作品的封面变体：'nebula' | 'waves' | 'orbit'，按种子换色以避免雷同 */
+function makeCover(file, seed = 1, variant = 'waves') {
+  const c = new Canvas(SIZE, SIZE);
+  const rand = rng(seed || 1);
+  const hue = (seed * 47) % 360;
+  const c1 = hsl(hue, 0.62, 0.16);
+  const c2 = hsl((hue + 42) % 360, 0.68, 0.44);
+  const c3 = hsl((hue + 105) % 360, 0.6, 0.68);
+  const cx = SIZE * 0.5, cy = SIZE * 0.5;
+
+  if (variant === 'nebula') {
+    const dx = SIZE * (0.32 + rand() * 0.36), dy = SIZE * (0.36 + rand() * 0.3);
+    c.paint((x, y) => {
+      const d = Math.min(1, Math.hypot(x - dx, y - dy) / (SIZE * 0.62));
+      const col = mixColor(c2, c1, Math.pow(d, 0.8));
+      const halo = Math.max(0, 1 - d * 1.7);
+      return [
+        Math.min(255, col[0] + c3[0] * halo * 0.5),
+        Math.min(255, col[1] + c3[1] * halo * 0.5),
+        Math.min(255, col[2] + c3[2] * halo * 0.5)
+      ];
+    });
+    for (let i = 0; i < 380; i++) {
+      const x = rand() * SIZE, y = rand() * SIZE;
+      const r = rand() * 1.8 + 0.3;
+      c.circle(x, y, r, c3[0], c3[1], c3[2], 40 + rand() * 150);
+    }
+    for (let i = 0; i < 8; i++) {
+      const x = rand() * SIZE, y = rand() * SIZE;
+      c.circle(x, y, 2.8, 255, 255, 255, 210);
+      c.ring(x, y, 7 + rand() * 5, 1.2, 255, 255, 255, 70);
+    }
+    for (let i = 0; i < 3; i++) c.ring(dx, dy, 110 + i * 70, 2.2 - i * 0.3, c3[0], c3[1], c3[2], 110 - i * 22);
+  } else if (variant === 'orbit') {
+    c.paint((x, y) => {
+      const t = (x / SIZE) * 0.4 + (y / SIZE) * 0.6;
+      return t < 0.5 ? mixColor(c1, c2, t * 2) : mixColor(c2, c3, (t - 0.5) * 2);
+    });
+    for (let i = 0; i < 7; i++) c.ring(cx, cy, 70 + i * 56, 2.4 - i * 0.18, 255, 255, 255, 120 - i * 12);
+    for (let i = 0; i < 5; i++) {
+      const ang = rand() * Math.PI * 2;
+      const rr = 120 + rand() * 220;
+      const px = cx + Math.cos(ang) * rr, py = cy + Math.sin(ang) * rr;
+      c.circle(px, py, 8 + rand() * 10, 255, 255, 255, 190);
+      c.ring(px, py, 18 + rand() * 12, 1.4, c3[0], c3[1], c3[2], 130);
+    }
+    c.circle(cx, cy, 46, 255, 255, 255, 230);
+  } else {
+    c.paint((x, y) => {
+      const u = (x / SIZE) * 0.55 + (y / SIZE) * 0.45;
+      return u < 0.5 ? mixColor(c1, c2, u * 2) : mixColor(c2, c3, (u - 0.5) * 2);
+    });
+    for (let i = 0; i < 4; i++) {
+      c.wave((u) => Math.sin(u * Math.PI * 2 * (2 + i * 1.6) + i * 1.1) * (0.4 - i * 0.06) * Math.exp(-Math.pow((u - 0.5) * 2.1, 2)),
+        i % 2 ? c3 : [255, 255, 255], 5 - i * 0.6, 220 - i * 26);
+    }
+    for (let i = 0; i < 5; i++) c.ring(cx, SIZE * 0.5, 100 + i * 62, 2 - i * 0.2, 255, 255, 255, 100 - i * 12);
+  }
+
+  for (let i = 0; i < 120; i++) {
+    const x = rand() * SIZE, y = rand() * SIZE;
+    c.circle(x, y, rand() * 1.6 + 0.3, 255, 255, 255, 40 + rand() * 90);
+  }
+  c.vignette(0.45);
+  return c.save(file);
+}
+
 function build() {
   const a = starfield(path.join(OUT_DIR, 'starfield-overture.png'));
   const b = sunrise(path.join(OUT_DIR, 'world-in-sync.png'));
@@ -155,4 +222,4 @@ function build() {
 }
 
 if (require.main === module) build();
-module.exports = { build, starfield, sunrise, autoCover, SIZE };
+module.exports = { build, starfield, sunrise, autoCover, makeCover, SIZE };

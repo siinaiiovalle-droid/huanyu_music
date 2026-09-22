@@ -17,6 +17,8 @@
     "add": "node scripts/add-track.js",
     "test:tts": "node scripts/test-tts.js",
     "test:api": "node scripts/test-api.js",
-    "build:static": "node scripts/build-static.js"
+    "build:static": "node scripts/build-static.js",
+    "daily": "node scripts/daily.js",
+    "sync:pages": "node scripts/build-static.js && cd dist && git init -b main && git remote add origin https://github.com/siinaiiovalle-droid/huanyu_music.git && git add -A && git commit -m \"pages update\" && git -c http.proxy= -c https.proxy= push -f origin main:gh-pages"
   }
 }
