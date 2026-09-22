@@ -27,7 +27,7 @@
     } else {
       box.innerHTML = tracks.map((t) => `
         <a class="admin-item" href="track.html?id=${encodeURIComponent(t.id)}">
-          <img src="${t.cover}" alt="${title(t)}">
+          ${window.COVER.img(t.cover, 'tiny', { alt: title(t) })}
           <div class="grow">
             <b>${title(t)}</b>
             <span>${window.I18N.t(t.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')} · ${fmt(t.duration)} · ▶ ${t.plays || 0}</span>

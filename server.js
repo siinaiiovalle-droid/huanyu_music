@@ -10,6 +10,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const zlib = require('zlib');
 const { URL } = require('url');
 
 const PORT = Number(process.env.PORT || 3000);
@@ -98,6 +99,19 @@ function checkAuth(req) {
 /* ---------------- 工具 ---------------- */
 function sendJson(res, code, data) {
   const body = Buffer.from(JSON.stringify(data), 'utf8');
+  const acceptsGzip = body.length > 1024 && /\bgzip\b/.test((res.req && res.req.headers['accept-encoding']) || '');
+  if (acceptsGzip) {
+    const gz = zlib.gzipSync(body, { level: 6 });
+    res.writeHead(code, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Content-Encoding': 'gzip',
+      'Vary': 'Accept-Encoding',
+      'Content-Length': gz.length,
+      'Cache-Control': 'no-store'
+    });
+    res.end(gz);
+    return;
+  }
   res.writeHead(code, {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': body.length,
@@ -170,6 +184,24 @@ function safeExt(filename, contentType) {
 }
 
 /* ---------------- 静态文件 ---------------- */
+// 可压缩的文本类型（图片与音频本身已压缩，跳过以省 CPU）
+const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.json', '.svg', '.txt', '.md', '.xml', '.map']);
+const gzipCache = new Map();
+
+/** 带缓存的 gzip：文件 mtime 不变则复用结果 */
+function gzipFor(filePath, mtimeMs) {
+  const hit = gzipCache.get(filePath);
+  if (hit && hit.mtimeMs === mtimeMs) return hit.buf;
+  try {
+    const buf = zlib.gzipSync(fs.readFileSync(filePath), { level: 6 });
+    if (gzipCache.size > 200) gzipCache.clear();
+    gzipCache.set(filePath, { mtimeMs, buf });
+    return buf;
+  } catch (e) {
+    return null;
+  }
+}
+
 function serveStatic(req, res, pathname) {
   let rel = decodeURIComponent(pathname);
   if (rel === '/' || rel === '') rel = '/index.html';
@@ -206,11 +238,26 @@ function serveStatic(req, res, pathname) {
         return;
       }
     }
+    const cacheControl = ext === '.html' ? 'no-cache' : 'public, max-age=3600';
+    if (COMPRESSIBLE.has(ext) && st.size > 1024 && st.size < 8 * 1024 * 1024 && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
+      const gz = gzipFor(filePath, st.mtimeMs);
+      if (gz) {
+        res.writeHead(200, {
+          'Content-Type': type,
+          'Content-Encoding': 'gzip',
+          'Vary': 'Accept-Encoding',
+          'Content-Length': gz.length,
+          'Cache-Control': cacheControl
+        });
+        res.end(gz);
+        return;
+      }
+    }
     res.writeHead(200, {
       'Content-Type': type,
       'Content-Length': st.size,
       'Accept-Ranges': 'bytes',
-      'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600'
+      'Cache-Control': cacheControl
     });
     fs.createReadStream(filePath).pipe(res);
   });
@@ -288,6 +335,8 @@ const api = {
         coverRel = `img/covers/${id}${cext}`;
         fs.mkdirSync(path.join(PUBLIC_DIR, 'img', 'covers'), { recursive: true });
         fs.writeFileSync(path.join(PUBLIC_DIR, coverRel), coverFile.data);
+        // 同步生成分档缩略图，避免前台用 800px 原图显示小尺寸
+        try { require('./scripts/make-thumbs').makeThumbs(path.join(PUBLIC_DIR, coverRel), { force: true }); } catch (e) { /* ignore */ }
       }
     }
     if (!coverRel) {

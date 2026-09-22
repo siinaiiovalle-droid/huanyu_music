@@ -126,7 +126,7 @@
     }
     box.innerHTML = tracks.map((t) => `
       <div class="admin-item" data-id="${t.id}">
-        <img src="${t.cover}" alt="">
+        ${window.COVER.img(t.cover, 'tiny', { alt: title(t) })}
         <div class="grow">
           <b>${title(t)}</b>
           <span>${window.I18N.t(t.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')} · ${fmt(t.duration)} · ▶ ${t.plays || 0} · ♥ ${t.likes || 0}</span>

@@ -59,7 +59,10 @@ function starfield(file, seed = 7) {
   drawWave(0.34, 5, 1.1, [180, 150, 255], 3.5, 180);
   drawWave(0.2, 8, 2.3, [255, 210, 160], 2.5, 150);
   c.vignette(0.5);
-  return c.save(file);
+  const size = c.save(file);
+  // 顺带生成 tiny / thumb / large 三档 JPEG，前端按展示尺寸取用（缺 ffmpeg 时静默跳过）
+  try { require('./make-thumbs').makeThumbs(file, { force: true }); } catch (e) { /* ignore */ }
+  return size;
 }
 
 /** 日出：暖色渐变 + 太阳 + 声波环 + 飞鸟点缀 */
@@ -110,7 +113,10 @@ function sunrise(file, seed = 21) {
     }
   }
   c.vignette(0.45);
-  return c.save(file);
+  const size = c.save(file);
+  // 顺带生成 tiny / thumb / large 三档 JPEG，前端按展示尺寸取用（缺 ffmpeg 时静默跳过）
+  try { require('./make-thumbs').makeThumbs(file, { force: true }); } catch (e) { /* ignore */ }
+  return size;
 }
 
 /** 后台上传作品时的默认封面：按 id 生成确定性的渐变声波图 */
@@ -135,7 +141,10 @@ function autoCover(file, seed = 1, label = '') {
     c.circle(x, y, rand() * 1.8 + 0.3, 255, 255, 255, 60 + rand() * 120);
   }
   c.vignette(0.45);
-  return c.save(file);
+  const size = c.save(file);
+  // 顺带生成 tiny / thumb / large 三档 JPEG，前端按展示尺寸取用（缺 ffmpeg 时静默跳过）
+  try { require('./make-thumbs').makeThumbs(file, { force: true }); } catch (e) { /* ignore */ }
+  return size;
 }
 
 function hsl(h, s, l) {
@@ -211,7 +220,10 @@ function makeCover(file, seed = 1, variant = 'waves') {
     c.circle(x, y, rand() * 1.6 + 0.3, 255, 255, 255, 40 + rand() * 90);
   }
   c.vignette(0.45);
-  return c.save(file);
+  const size = c.save(file);
+  // 顺带生成 tiny / thumb / large 三档 JPEG，前端按展示尺寸取用（缺 ffmpeg 时静默跳过）
+  try { require('./make-thumbs').makeThumbs(file, { force: true }); } catch (e) { /* ignore */ }
+  return size;
 }
 
 function build() {

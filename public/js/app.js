@@ -27,7 +27,7 @@
         <div class="divider"></div>
       </div>
       <div class="featured-card">
-        <div class="featured-cover"><img src="${t.cover}" alt="${title(t)}"></div>
+        <div class="featured-cover">${window.COVER.img(t.cover, 'large', { alt: title(t), eager: true })}</div>
         <div class="featured-info">
           <span class="sub">${window.I18N.t(t.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')}</span>
           <h3>${title(t)}</h3>
@@ -52,7 +52,7 @@
     return `
       <article class="card" data-id="${t.id}">
         <div class="card-cover">
-          <img src="${t.cover}" alt="${title(t)}" loading="lazy">
+          ${window.COVER.img(t.cover, 'thumb', { alt: title(t) })}
           <span class="card-kind">${kindLabel}</span>
           <div class="play-fab">▶</div>
         </div>

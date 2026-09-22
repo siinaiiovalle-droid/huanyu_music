@@ -66,7 +66,7 @@
           ${others.map((o) => `
             <article class="card" data-id="${o.id}">
               <div class="card-cover">
-                <img src="${o.cover}" alt="${title(o)}" loading="lazy">
+                ${window.COVER.img(o.cover, 'thumb', { alt: title(o) })}
                 <span class="card-kind">${window.I18N.t(o.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')}</span>
                 <div class="play-fab">▶</div>
               </div>
@@ -83,7 +83,7 @@
       <div class="detail-grid">
         <div>
           <div class="detail-cover">
-            <img src="${t.cover}" alt="${title(t)}">
+            ${window.COVER.img(t.cover, 'large', { alt: title(t), eager: true })}
             <span class="badge">${kindLabel}</span>
           </div>
           <div class="panel" style="margin-top:16px">

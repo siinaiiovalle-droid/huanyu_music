@@ -47,7 +47,7 @@
       el.innerHTML = `
         <div class="player" id="huanyu-player">
           <div class="player-now">
-            <img id="p-cover" alt="" src="">
+            <img id="p-cover" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
             <div>
               <div class="t" id="p-title">—</div>
               <div class="s" id="p-sub"></div>
@@ -135,7 +135,7 @@
       this.tracks.forEach((t, i) => {
         const d = document.createElement('div');
         d.className = 'pl-item' + (i === this.index ? ' active' : '');
-        d.innerHTML = `<img src="${t.cover}" alt=""><div><div class="n">${this._title(t)}</div><div class="d">${fmt(t.duration)} · ${global.I18N.t(t.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')}</div></div>`;
+        d.innerHTML = `${window.COVER.img(t.cover, 'tiny', { alt: '' })}<div><div class="n">${this._title(t)}</div><div class="d">${fmt(t.duration)} · ${global.I18N.t(t.kind === 'instrumental' ? 'kind.instrumental' : 'kind.song')}</div></div>`;
         d.onclick = () => { this.playIndex(i); box.parentElement.classList.remove('open'); };
         box.appendChild(d);
       });
@@ -182,7 +182,9 @@
       this.index = i;
       const t = this.tracks[i];
       const $ = (id) => document.getElementById(id);
-      $('p-cover').src = t.cover;
+      const el = $('p-cover');
+      el.onerror = () => window.COVER.fix(el, t.cover);
+      el.src = window.COVER.tiny(t.cover);
       $('p-title').textContent = this._title(t);
       $('p-sub').textContent = this._sub(t);
       $('p-dur').textContent = fmt(t.duration);
