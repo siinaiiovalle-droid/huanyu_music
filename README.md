@@ -31,7 +31,9 @@ npm run add              # 命令行发布新作品（加 --server 可远程上�
 npm run test:api         # 接口冒烟自检
 npm run build:static     # 导出纯静态站到 dist/（配合 static-shim.js 免后端运行）
 npm run sync:pages       # 重新导出静态站并强推到 gh-pages 分支
-npm run daily:task       # 注册 / 更新 Windows 计划任务
+npm run covers            # 重新生成示例封面（会同步出各档缩略图）
+npm run thumbs            # 为所有封面补/重做 tiny/thumb/large 三档 JPEG（--force 全量重做）
+npm run daily:task          # 注册 / 更新 Windows 计划任务
 ```
 
 `npm run daily` 支持的参数：
@@ -61,6 +63,7 @@ node scripts/install-daily-task.js --uninstall  # 删除任务
 
 ## 注意事项
 
+- 封面必须是 `public/img/covers/*.png`；`tiny 96 / thumb 320 / large 720` 三档 JPEG 由 `npm run thumbs` 生成到同名子目录，前端 `public/js/cover.js` 按展示位置自动选档，缺档时自动回退原图。新封面由 `make-covers.js` 生成后会自动补档，无需手动执行。
 - `build/`（WAV 分轨与人声切片，约 60MB）与 `dist/`（静态导出结果）已在 `.gitignore` 中忽略，不会入库。
 - `data/tracks.json` 里的 `plays`、`likes`、`updatedAt` 属于运行时噪声，提交前按需取舍。
 - 服务端在 `require` 时即开始监听端口，测试脚本应判断 `server.listening` 而不要重复 `listen`。

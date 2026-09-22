@@ -10,6 +10,9 @@ dist/
 npm-debug.log*
 scripts/data/last-image-run.json
 
+# 浏览器自动化临时产物
+.playwright-cli/
+
 # 系统文件
 .DS_Store
 Thumbs.db

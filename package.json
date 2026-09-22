@@ -14,6 +14,7 @@
     "compose:instrumental": "node scripts/compose-instrumental.js",
     "compose:song": "node scripts/compose-song.js",
     "covers": "node scripts/make-covers.js",
+    "thumbs": "node scripts/make-thumbs.js",
     "add": "node scripts/add-track.js",
     "test:tts": "node scripts/test-tts.js",
     "test:api": "node scripts/test-api.js",
