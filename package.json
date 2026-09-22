@@ -16,6 +16,7 @@
     "covers": "node scripts/make-covers.js",
     "add": "node scripts/add-track.js",
     "test:tts": "node scripts/test-tts.js",
-    "test:api": "node scripts/test-api.js"
+    "test:api": "node scripts/test-api.js",
+    "build:static": "node scripts/build-static.js"
   }
 }
