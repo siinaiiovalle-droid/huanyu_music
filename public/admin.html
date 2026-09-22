@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>发布作品 · 寰宇音乐台</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="img/favicon.svg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">♫</div>
+        <div class="brand-text"><b>寰宇音乐台</b><span>Huanyu Music</span></div>
+      </a>
+      <nav class="site-nav">
+        <a href="index.html" data-i18n="nav.home"></a>
+        <a href="index.html#works" data-i18n="nav.works"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="admin.html" class="active" data-i18n="nav.admin"></a>
+      </nav>
+      <select class="lang-select" id="langSelect" aria-label="language"></select>
+    </div>
+  </header>
+
+  <main class="container admin-wrap">
+    <!-- 登录 -->
+    <section class="admin-card" id="loginCard">
+      <h2 data-i18n="admin.loginTitle"></h2>
+      <p class="hint" data-i18n="admin.subtitle"></p>
+      <div class="field">
+        <label data-i18n="admin.password"></label>
+        <input type="password" id="pw" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="btnLogin" data-i18n="admin.login"></button>
+      <div class="msg" id="loginMsg"></div>
+    </section>
+
+    <!-- 上传 -->
+    <section class="admin-card" id="uploadCard" hidden>
+      <h2 data-i18n="admin.title"></h2>
+      <p class="hint" data-i18n="admin.uploadTitle"></p>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="field">
+          <label data-i18n="admin.f.title"></label>
+          <input type="text" name="title" id="f-title" required>
+        </div>
+        <div class="field">
+          <label data-i18n="admin.f.subtitle"></label>
+          <input type="text" name="subtitle">
+        </div>
+        <div class="field">
+          <label data-i18n="admin.f.desc"></label>
+          <textarea name="description"></textarea>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="admin.f.kind"></label>
+            <select name="kind">
+              <option value="song" data-i18n="kind.song"></option>
+              <option value="instrumental" data-i18n="kind.instrumental"></option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="admin.f.genre"></label>
+            <input type="text" name="genre">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="admin.f.bpm"></label>
+            <input type="number" name="bpm" min="0" max="300">
+          </div>
+          <div class="field">
+            <label data-i18n="admin.f.key"></label>
+            <input type="text" name="musicalKey">
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="admin.f.audio"></label>
+          <input type="file" name="audio" id="f-audio" accept=".mp3,.wav,.ogg,.m4a,.flac" required>
+        </div>
+        <div class="field">
+          <label data-i18n="admin.f.cover"></label>
+          <input type="file" name="cover" accept=".png,.jpg,.jpeg,.webp">
+        </div>
+        <label class="field" style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;">
+          <input type="checkbox" name="featured" value="1" style="width:auto;">
+          <span data-i18n="admin.f.featured"></span>
+        </label>
+        <button class="btn btn-primary" id="btnSubmit" data-i18n="admin.submit"></button>
+        <button class="btn btn-ghost" id="btnLogout" data-i18n="admin.logout"></button>
+        <div class="msg" id="upMsg"></div>
+      </form>
+    </section>
+
+    <!-- 已发布 -->
+    <section class="admin-card" id="listCard" hidden>
+      <h2 data-i18n="admin.listTitle"></h2>
+      <div class="admin-list" id="trackList"><div class="loading" data-i18n="loading"></div></div>
+      <p class="hint" style="margin-top:14px" data-i18n="admin.tip"></p>
+      <p class="hint" style="font-family:ui-monospace,Consolas,monospace">npm run add -- --file 新歌.mp3 --title "新歌名" --kind song</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="links">
+        <a href="index.html" data-i18n="nav.home"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="admin.html" data-i18n="nav.admin"></a>
+      </div>
+      <div data-i18n="footer.rights"></div>
+      <div data-i18n="footer.note"></div>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

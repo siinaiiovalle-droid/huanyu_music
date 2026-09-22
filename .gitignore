@@ -1,0 +1,15 @@
+# 依赖
+node_modules/
+
+# 构建中间产物（WAV 分轨、人声切片、TTS 调试样本）
+build/
+
+# 日志与临时文件
+*.log
+npm-debug.log*
+scripts/data/last-image-run.json
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini

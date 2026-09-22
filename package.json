@@ -1,0 +1,21 @@
+{
+  "name": "huanyu-music",
+  "version": "1.0.0",
+  "private": true,
+  "description": "寰宇音乐台 Huanyu Music —— 面向世界的原创音乐网站（零第三方依赖，仅需 Node.js 18+）",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "compose": "node scripts/build-audio.js",
+    "compose:instrumental": "node scripts/compose-instrumental.js",
+    "compose:song": "node scripts/compose-song.js",
+    "covers": "node scripts/make-covers.js",
+    "add": "node scripts/add-track.js",
+    "test:tts": "node scripts/test-tts.js",
+    "test:api": "node scripts/test-api.js"
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>寰宇音乐台 · 让世界听见同一种心跳</title>
+  <meta name="description" content="寰宇音乐台：由 AI 作曲引擎实时合成的原创音乐与歌曲，面向全世界的听众。">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="img/favicon.svg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">♫</div>
+        <div class="brand-text">
+          <b>寰宇音乐台</b>
+          <span>Huanyu Music</span>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="index.html" class="active" data-i18n="nav.home"></a>
+        <a href="#works" data-i18n="nav.works"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="admin.html" data-i18n="nav.admin"></a>
+      </nav>
+      <select class="lang-select" id="langSelect" aria-label="language"></select>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <span class="hero-tag" data-i18n="hero.tag"></span>
+      <h1 data-i18n="hero.title"></h1>
+      <p data-i18n="hero.desc"></p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="heroPlay">▶ <span data-i18n="hero.play"></span></button>
+        <a class="btn btn-ghost" href="#works" data-i18n="hero.browse"></a>
+      </div>
+    </section>
+
+    <section class="section" id="featured"></section>
+
+    <section class="section" id="works">
+      <div class="section-head">
+        <h2 data-i18n="sec.all"></h2>
+        <span id="countLabel"></span>
+        <div class="divider"></div>
+      </div>
+      <div class="grid" id="grid">
+        <div class="loading" data-i18n="loading"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="links">
+        <a href="index.html" data-i18n="nav.home"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="admin.html" data-i18n="nav.admin"></a>
+        <a href="api/tracks">API</a>
+      </div>
+      <div data-i18n="footer.rights"></div>
+      <div data-i18n="footer.note"></div>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
