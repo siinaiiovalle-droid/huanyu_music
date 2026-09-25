@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head>
+  <script src="static-shim.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>关于 · 寰宇音乐台</title>
+  <meta name="description" content="寰宇音乐台：由自研作曲引擎实时合成的原创音乐，面向全世界。">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="img/favicon.svg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">♫</div>
+        <div class="brand-text"><b>寰宇音乐台</b><span>Huanyu Music</span></div>
+      </a>
+      <nav class="site-nav">
+        <a href="index.html" data-i18n="nav.home"></a>
+        <a href="index.html#works" data-i18n="nav.works"></a>
+        <a href="about.html" class="active" data-i18n="nav.about"></a>
+        <a href="admin.html" data-i18n="nav.admin"></a>
+      </nav>
+      <select class="lang-select" id="langSelect" aria-label="language"></select>
+    </div>
+  </header>
+
+  <main class="container admin-wrap">
+    <div class="admin-card">
+      <h2 data-i18n="about.title"></h2>
+      <div class="prose">
+        <p data-i18n="about.p1"></p>
+        <p data-i18n="about.p2"></p>
+        <h3 data-i18n="about.tech"></h3>
+        <p data-i18n="about.techList"></p>
+        <p data-i18n="about.future"></p>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2 data-i18n="sec.all"></h2>
+      <div class="admin-list" id="aboutList"><div class="loading" data-i18n="loading"></div></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="links">
+        <a href="index.html" data-i18n="nav.home"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="admin.html" data-i18n="nav.admin"></a>
+      </div>
+      <div data-i18n="footer.rights"></div>
+      <div data-i18n="footer.note"></div>
+    </div>
+  </footer>
+
+  <script src="js/cover.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/about.js"></script>
+</body>
+</html>
